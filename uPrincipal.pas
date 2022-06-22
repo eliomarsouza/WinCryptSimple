@@ -38,9 +38,9 @@ begin
     oCryptSimple.SelecionarCertificado();
 
     ListBox1.Items.Clear;
-    ListBox1.Items.Add(' Chave: '+oCryptSimple.NumeroSerial);
-    ListBox1.Items.Add(' Nome: '+oCryptSimple.NomeEmpresa);
-    ListBox1.Items.Add(' Vencimento: '+oCryptSimple.DataVencimento);
+    ListBox1.Items.Add('Chave: '+oCryptSimple.NumeroSerial);
+    ListBox1.Items.Add('Nome: '+oCryptSimple.NomeEmpresa);
+    ListBox1.Items.Add('Vencimento: '+oCryptSimple.DataVencimento);
 
   finally
     oCryptSimple.Free;
