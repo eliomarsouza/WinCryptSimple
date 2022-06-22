@@ -1,0 +1,17 @@
+program CryptProj;
+
+uses
+  Vcl.Forms,
+  uPrincipal in 'uPrincipal.pas' {Form7},
+  Crypt in 'Crypt.pas',
+  uCryptLibrary in 'uCryptLibrary.pas',
+  SASLXOAuth2 in 'SASLXOAuth2.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TForm7, Form7);
+  Application.Run;
+end.

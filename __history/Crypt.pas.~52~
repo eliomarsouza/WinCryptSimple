@@ -1,0 +1,128 @@
+unit Crypt;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs,  strutils, typinfo, comobj, synautil, synacode,
+  uCryptLibrary;
+
+
+
+type
+  //PCCERT_CONTEXT = type Pointer;
+
+
+
+  HCRYPTPROV_LEGACY = type Pointer;
+  PFN_CRYPT_GET_SIGNER_CERTIFICATE = type Pointer;
+
+
+
+  function SelecionarCertificado: String; //#eliomar
+
+ var
+    FpCertContext: PCCERT_CONTEXT;
+    FpStore: HCERTSTORE;
+    FpPFXData: AnsiString;
+
+
+
+
+
+
+
+
+ implementation
+
+
+
+
+
+
+
+function GetSerialNumber(ACertContext: PCCERT_CONTEXT): String;
+var
+  I: Integer;
+  ByteArr: array of byte;
+begin
+  Result := '';
+  if Assigned(ACertContext) then
+  begin
+    SetLength(ByteArr, ACertContext^.pCertInfo^.SerialNumber.cbData);
+    Move(ACertContext^.pCertInfo^.SerialNumber.pbData^,
+         ByteArr[0],
+         ACertContext^.pCertInfo^.SerialNumber.cbData);
+
+    For I := 0 to ACertContext^.pCertInfo^.SerialNumber.cbData-1 do
+      Result := IntToHex(ByteArr[I], 2) + Result;
+
+    Result := Trim(UpperCase(Result));
+  end;
+end;
+
+procedure OpenSystemStore;
+var
+  StoreFlag: DWORD;
+  StoreProvider: LPCSTR;
+  StoreName : string;
+begin
+  if (FpStore <> Nil) then
+    Exit;
+
+  StoreFlag     := CERT_SYSTEM_STORE_CURRENT_USER;
+  StoreProvider := CERT_STORE_PROV_SYSTEM_W;
+  StoreName     := 'My';
+
+
+  FpStore := CertOpenStore(
+      StoreProvider, 0, 0,
+      StoreFlag or CERT_STORE_READONLY_FLAG,
+      LPCTSTR( StoreName ) );
+
+ // if (FpStore = Nil) then
+ //   raise EACBrDFeException.Create(
+  //    'TDFeWinCrypt. Erro ao abrir StoreName: ' + StoreName +
+   //   ' Location: ' + IntToStr(Integer(FpDFeSSL.StoreLocation)));
+
+end;
+
+function SelecionarCertificado: String; //#eliomar
+var
+  ACertContext: PCCERT_CONTEXT;
+begin
+  Result := '';
+
+  //create
+  FpCertContext := Nil;
+  FpStore := Nil;
+  FpPFXData := '';
+
+
+  //DescarregarCertificado;
+  OpenSystemStore;
+
+  ACertContext := CryptUIDlgSelectCertificateFromStore(
+      FpStore,
+      0,
+      'Selecione um Certificado',
+      'Selecione o Certificado que deseja utilizar:',
+      CRYPTUI_SELECT_LOCATION_COLUMN or CRYPTUI_SELECT_ISSUEDBY_COLUMN or CRYPTUI_SELECT_INTENDEDUSE_COLUMN,
+      0,
+      Nil);
+
+  if ACertContext <> Nil then
+     Result := GetSerialNumber(ACertContext);
+
+  //DescarregarCertificado;
+
+  if (Result <> '') then
+  begin
+    ShowMessage();
+   // FpDFeSSL.NumeroSerie := Result;
+   // CarregarCertificado;
+  end;
+end;
+
+
+end.

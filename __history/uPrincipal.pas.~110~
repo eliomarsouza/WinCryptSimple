@@ -1,0 +1,47 @@
+unit uPrincipal;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Data.Bind.Components, Data.Bind.ObjectScope;
+
+type
+  TfPrincipal = class(TForm)
+    btnLerCertificado: TButton;
+    Label1: TLabel;
+    Button1: TButton;
+    procedure btnLerCertificadoClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  fPrincipal: TfPrincipal;
+
+implementation
+
+uses CryptSimples;
+
+{$R *.dfm}
+
+procedure TfPrincipal.btnLerCertificadoClick(Sender: TObject);
+var
+  oCryptSimple : TCryptSimple;
+begin
+  oCryptSimple := TCryptSimple.Create;
+
+  Label1.Caption := oCryptSimple.SelecionarCertificado();
+
+  oCryptSimple.Free;
+end;
+
+procedure TfPrincipal.Button1Click(Sender: TObject);
+begin
+  Close;
+end;
+
+end.

@@ -1,0 +1,57 @@
+object fPrincipal: TfPrincipal
+  Left = 0
+  Top = 0
+  Caption = 'Certificado via WinCrypt'
+  ClientHeight = 233
+  ClientWidth = 385
+  Color = clBtnFace
+  Constraints.MaxHeight = 280
+  Constraints.MaxWidth = 410
+  Constraints.MinHeight = 272
+  Constraints.MinWidth = 401
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
+  Position = poDesktopCenter
+  PixelsPerInch = 96
+  DesignSize = (
+    385
+    233)
+  TextHeight = 15
+  object Label1: TLabel
+    Left = 18
+    Top = 17
+    Width = 337
+    Height = 153
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    AutoSize = False
+    Caption = '...'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -20
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
+    WordWrap = True
+  end
+  object btnLerCertificado: TButton
+    Left = 184
+    Top = 200
+    Width = 112
+    Height = 25
+    Caption = 'Ler Certificado'
+    TabOrder = 0
+    OnClick = btnLerCertificadoClick
+  end
+  object Button1: TButton
+    Left = 302
+    Top = 200
+    Width = 75
+    Height = 25
+    Caption = 'Sair'
+    TabOrder = 1
+    OnClick = Button1Click
+  end
+end

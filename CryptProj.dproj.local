@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899-12-30 00:00:00.000.188,=C:\Users\Filosoft\Documents\Embarcadero\Studio\Projects\Unit7.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.995,C:\Source\Crypt\Unit1.pas=C:\Source\Crypt\uCryptLibrary.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.304,=C:\Source\Crypt\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.166,C:\Source\Crypt\uPrincipal.dfm=C:\Users\Filosoft\Documents\Embarcadero\Studio\Projects\Unit7.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.931,C:\Source\Crypt\CryptProj.dproj=C:\Users\Filosoft\Documents\Embarcadero\Studio\Projects\Project7.dproj</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.150,=C:\Users\Filosoft\Documents\Embarcadero\Studio\Projects\Unit7.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.604,=C:\Source\Crypt\Crypt.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.741,C:\Source\Crypt\SASLXOAuth2.pas=C:\Source\Crypt\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.166,C:\Source\Crypt\uPrincipal.pas=C:\Users\Filosoft\Documents\Embarcadero\Studio\Projects\Unit7.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.105,=C:\Source\Crypt\Unit1.pas</Transaction>
+    <Transaction>2022-06-22 15:50:55.122,C:\Source\GitHubProjetos\WinCrypt\CryptSimples.pas=C:\Source\GitHubProjetos\WinCrypt\Crypt.pas</Transaction>
+    <Transaction>2022-06-22 16:00:28.141,C:\Source\GitHubProjetos\WinCrypt\SASLXOAuth2.pas=</Transaction>
+  </Transactions>
+</BorlandProject>

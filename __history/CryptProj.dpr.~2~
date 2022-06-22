@@ -1,0 +1,15 @@
+program CryptProj;
+
+uses
+  Vcl.Forms,
+  uPrincipal in 'uPrincipal.pas' {Form7},
+  Crypt in 'Crypt.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TForm7, Form7);
+  Application.Run;
+end.

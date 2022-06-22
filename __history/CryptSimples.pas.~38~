@@ -1,0 +1,158 @@
+unit CryptSimples;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs,  strutils, typinfo, comobj, synautil, synacode,
+  uCryptLibrary;
+
+
+type
+
+  HCRYPTPROV_LEGACY = type Pointer;
+  PFN_CRYPT_GET_SIGNER_CERTIFICATE = type Pointer;
+
+  type
+    TCryptSimple=Class
+      private
+        FpCertContext: PCCERT_CONTEXT;
+        FpStore: HCERTSTORE;
+        FpPFXData: AnsiString;
+
+        procedure OpenSystemStore;
+        function GetSerialNumber(ACertContext: PCCERT_CONTEXT): String;
+
+      public
+        NumeroSerial: string;
+        DataVencimento : string;
+        NomeEmpresa : string;
+
+        function SelecionarCertificado: String; //#eliomar
+        function GetIssuerName(ACertContext: PCCERT_CONTEXT): String;
+        function GetNotAfter(ACertContext: PCCERT_CONTEXT): TDateTime;
+    End;
+
+
+ implementation
+
+
+constructor TCryptSimples.Create();
+begin
+    NumeroSerial   := GetSerialNumber(ACertContext);
+  DataVencimento := dateToStr(GetNotAfter(ACertContext));
+  NomeEmpresa    := GetIssuerName(ACertContext);
+end;
+
+function TCryptSimple.GetSerialNumber(ACertContext: PCCERT_CONTEXT): String;
+var
+  I: Integer;
+  ByteArr: array of byte;
+begin
+  Result := '';
+  if Assigned(ACertContext) then
+  begin
+    SetLength(ByteArr, ACertContext^.pCertInfo^.SerialNumber.cbData);
+    Move(ACertContext^.pCertInfo^.SerialNumber.pbData^,
+         ByteArr[0],
+         ACertContext^.pCertInfo^.SerialNumber.cbData);
+
+    For I := 0 to ACertContext^.pCertInfo^.SerialNumber.cbData-1 do
+      Result := IntToHex(ByteArr[I], 2) + Result;
+
+    Result := Trim(UpperCase(Result));
+  end;
+end;
+
+
+procedure TCryptSimple.OpenSystemStore;
+var
+  StoreFlag: DWORD;
+  StoreProvider: LPCSTR;
+  StoreName : string;
+begin
+  if (FpStore <> Nil) then
+    Exit;
+
+  StoreFlag     := CERT_SYSTEM_STORE_CURRENT_USER;
+  StoreProvider := CERT_STORE_PROV_SYSTEM_W;
+  StoreName     := 'My';
+
+
+  FpStore := CertOpenStore(
+      StoreProvider, 0, 0,
+      StoreFlag or CERT_STORE_READONLY_FLAG,
+      LPCTSTR( StoreName ) );
+end;
+
+
+function TCryptSimple.SelecionarCertificado: String; //#eliomar
+var
+  ACertContext: PCCERT_CONTEXT;
+begin
+  Result := '';
+  //create
+  FpCertContext := Nil;
+  FpStore := Nil;
+  FpPFXData := '';
+
+  OpenSystemStore;
+
+  ACertContext := CryptUIDlgSelectCertificateFromStore(
+      FpStore,
+      0,
+      'Selecione um Certificado',
+      'Selecione o Certificado que deseja utilizar:',
+      CRYPTUI_SELECT_LOCATION_COLUMN or CRYPTUI_SELECT_ISSUEDBY_COLUMN or CRYPTUI_SELECT_INTENDEDUSE_COLUMN,
+      0,
+      Nil);
+
+  if ACertContext <> Nil then
+     Result := GetSerialNumber(ACertContext);
+
+  NumeroSerial   := GetSerialNumber(ACertContext);
+  DataVencimento := dateToStr(GetNotAfter(ACertContext));
+  NomeEmpresa    := GetIssuerName(ACertContext);
+
+end;
+
+
+function TCryptSimple.GetIssuerName(ACertContext: PCCERT_CONTEXT): String;
+var
+  CertName: {$IfDef UNICODE}WideString{$Else}String{$EndIf};
+  BytesRead: DWORD;
+begin
+  Result := '';
+  if Assigned(ACertContext) then
+  begin
+    SetLength(CertName, 1024);
+    BytesRead := CertNameToStr( ACertContext^.dwCertEncodingType,
+                      @ACertContext^.pCertInfo^.Issuer,
+                      CERT_X500_NAME_STR,
+                      {$IfDef UNICODE}LPWSTR{$Else}LPSTR{$EndIf}(CertName),
+                      1024);
+    if BytesRead > 0 then
+      SetLength(CertName, BytesRead-1)
+    else
+      ShowMessage('Falha ao executar "CertNameToStr" em "GetIssuerName".');   //EACBrDFeException.Create( 'Falha ao executar "CertNameToStr" em "GetIssuerName". Erro:'+GetLastErrorAsHexaStr);
+
+    Result := String( CertName );
+  end;
+end;
+
+
+function TCryptSimple.GetNotAfter(ACertContext: PCCERT_CONTEXT): TDateTime;
+var
+  LocalFileTime: TFileTime;
+  SystemTime: TSystemTime;
+begin
+  Result := 0;
+  if Assigned(ACertContext) then
+  begin
+    FileTimeToLocalFileTime(TFILETIME(ACertContext^.pCertInfo^.NotAfter), LocalFileTime);
+    FileTimeToSystemTime(LocalFileTime, SystemTime);
+    Result := SystemTimeToDateTime(SystemTime);
+  end;
+end;
+
+end.
